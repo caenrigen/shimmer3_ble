@@ -1,0 +1,45 @@
+[project]
+name = "shimmer3_ble"
+version = "0.0.1"
+description = "A Python library for communicating with Shimmer devices over Bluetooth Low Energy interface"
+authors = [{ name = "Victor Negirneac" }]
+requires-python = ">=3.10"
+readme = "README.md"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Electronic Health",
+  "Topic :: Scientific/Engineering :: Human Machine Interfaces",
+]
+dependencies = [
+  "bleak",
+  # Clone `pyshimmer` from a specific commit
+  "pyshimmer @ git+https://github.com/caenrigen/pyshimmer@a3dd1876a486997648e2fb0a9557e8bb3e41fb79#egg=pyshimmer",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/caenrigen/shimmer3_ble"
+"Source" = "https://github.com/caenrigen/shimmer3_ble"
+"Bug Tracker" = "https://github.com/caenrigen/shimmer3_ble/issues"
+
+# Dev config
+[project.optional-dependencies]
+examples = ["click"]
+
+# Ruff is installed and run using pre-commit
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+lint.select = ["B", "E", "F", "I", "W", "N", "S"]
+lint.ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+[tool.ruff.lint.isort]
+known-first-party = ["shimmer3_ble"]

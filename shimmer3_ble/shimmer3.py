@@ -79,7 +79,7 @@ class Shimmer3BleConnection:
     _notify_uuids: list[str] = field(default_factory=list, init=False)
     _loop: asyncio.AbstractEventLoop | None = field(default=None, init=False)
 
-    async def __aenter__(self) -> Shimmer3BleConnection:
+    async def __aenter__(self):
         return self
 
     async def __aexit__(self, *_exc_info: object) -> None:

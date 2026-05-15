@@ -95,17 +95,25 @@ class Shimmer3BleConnection:
             return
         self.flow_paused = data[-1] != 0
 
+def calc_gsr_valid_range(scale: int, tolerance: float = 0.1):
+    min_gsr, max_gsr = GSR_VALID_RANGES[scale]
+    return min_gsr * (1 - tolerance), max_gsr * (1 + tolerance)
 
-def calc_gsr(scale: int, adc: int):
+def calc_gsr(scale: int, adc: int, clip_to_valid: bool = False, tolerance: float = 0.1):
     rf: int = GSR_CONFIG_TO_FEEDBACK_RESISTORS[scale]
     gsr_ohm = rf / ((adc * 3 * 2 / 4095) - 1.0)
+    if clip_to_valid:
+        min_gsr, max_gsr = calc_gsr_valid_range(scale, tolerance)
+        if gsr_ohm < min_gsr:
+            gsr_ohm = min_gsr
+        elif gsr_ohm > max_gsr:
+            gsr_ohm = max_gsr
     return gsr_ohm
 
 
 def validate_gsr(scale: int, gsr_ohm: float, tolerance: float = 0.1):
-    min_gsr, max_gsr = GSR_VALID_RANGES[scale]
-    return min_gsr * (1 - tolerance) < gsr_ohm and gsr_ohm < max_gsr * (1 + tolerance)
-
+    min_gsr, max_gsr = calc_gsr_valid_range(scale, tolerance)
+    return min_gsr < gsr_ohm and gsr_ohm < max_gsr
 
 def decode_gsr(gsr_raw: int):
     # Top two bits: scale, lower 12 bits: ADC.
